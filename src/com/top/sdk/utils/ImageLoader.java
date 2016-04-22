@@ -150,8 +150,9 @@ public class ImageLoader {
 			BitmapFactory.decodeStream(new FileInputStream(f), null, o);
 			// Find the correct scale value. It should be the power of 2.
 //			final int REQUIRED_SIZE = 200;
-//			int width_tmp = o.outWidth, height_tmp = o.outHeight;
+			int width_tmp = o.outWidth, height_tmp = o.outHeight;
 			int scale = 1;
+			String imageType = o.outMimeType;
 			// decode with inSampleSize
 			BitmapFactory.Options o2 = new BitmapFactory.Options();
 			o2.inSampleSize = scale;
@@ -160,6 +161,30 @@ public class ImageLoader {
 		}
 		return null;
 	}
+	
+	
+	
+	public static Bitmap decodeFile(File f,int reqHeight, int reqWith) {
+		try {
+			// decode image size
+			BitmapFactory.Options o = new BitmapFactory.Options();
+			o.inJustDecodeBounds = true;
+			BitmapFactory.decodeStream(new FileInputStream(f), null, o);
+			// Find the correct scale value. It should be the power of 2.
+//			final int REQUIRED_SIZE = 200;
+//			int width_tmp = o.outWidth, height_tmp = o.outHeight;
+			int scale = 1;
+//			String imageType = o.outMimeType;
+			// decode with inSampleSize
+			BitmapFactory.Options o2 = new BitmapFactory.Options();
+			o2.inSampleSize = scale;
+			return BitmapFactory.decodeStream(new FileInputStream(f), null, o2);
+		} catch (FileNotFoundException e) {
+		}
+		return null;
+	}
+	
+
 
 	// Task for the queue
 	private class PhotoToLoad {
@@ -263,4 +288,8 @@ public class ImageLoader {
 	public void setmILoadedFinishLister(ILoadedFinishLister mILoadedFinishLister) {
 		this.mILoadedFinishLister = mILoadedFinishLister;
 	}
+	
+	
+	
+	
 }

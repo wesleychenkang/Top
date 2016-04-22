@@ -6,9 +6,9 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Rect;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.text.TextUtils;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
@@ -22,6 +22,8 @@ import com.top.sdk.entity.Constants;
 import com.top.sdk.entity.PopData;
 import com.top.sdk.utils.FileUtil;
 import com.top.sdk.utils.ImageLoader;
+import com.top.sdk.utils.LogUtil;
+import com.top.sdk.utils.MetricUtil;
 
 public class PopView extends FrameLayout implements OnClickListener {
 	private ImageView imgAd;
@@ -29,8 +31,6 @@ public class PopView extends FrameLayout implements OnClickListener {
 	private ClickCallBack callBack;
 	private final int imgAdId = 0x1233432;
 	private final int imgRemoveId = 0x1233437;
-	private static final float AD_HEIGHT_PERCENTAGE = 3f / 4; // 高度的4分之3
-	private static final float AD_WIDTH_PERCENTAGE = 11f / 12; // 宽度的 12分之11
 	private static int screenWidth;
 	private static int screenHeight;
 	private int controlHeight;
@@ -44,26 +44,29 @@ public class PopView extends FrameLayout implements OnClickListener {
 	}
 
 	@SuppressLint("NewApi")
-	private void initView(Context context,int width,int height) {
+	private void initView(Context context, int width, int height) {
 		setBackgroundColor(Color.TRANSPARENT);
-		
+
 		FrameLayout lay = new FrameLayout(context);
-		LayoutParams framelp = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
+		lay.setBackgroundColor(Color.RED);
+		LayoutParams framelp = new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT);
 		framelp.gravity = Gravity.CENTER;
-		addView(lay,framelp);
-		
+		addView(lay, framelp);
+
 		imgAd = new ImageView(context);
-		Drawable drawable = getResources().getDrawable(R.drawable.pop);
-		imgAd.setBackground(drawable);
+		BitmapDrawable b = new BitmapDrawable(getResources(), screenImageBitmap);
+		if (screenImageBitmap != null)
+			imgAd.setBackground(b);
 		imgAd.setId(imgAdId);
 		imgAd.setOnClickListener(this);
-		
-		LayoutParams lpAd = new LayoutParams(LayoutParams.WRAP_CONTENT,LayoutParams.WRAP_CONTENT);
-		lpAd.height = height;
-		lpAd.width = width;
-		lpAd.gravity = Gravity.CENTER;
-		lay.addView(imgAd,lpAd);
-		
+
+		LayoutParams lpAd = new LayoutParams(LayoutParams.MATCH_PARENT,
+				LayoutParams.MATCH_PARENT);
+
+		// lpAd.gravity = Gravity.CENTER;
+		lay.addView(imgAd, lpAd);
+
 		Drawable drawable_move = getResources().getDrawable(
 				R.drawable.lock_btn_remove_normal);
 		imgMove = new ImageView(context);
@@ -72,70 +75,79 @@ public class PopView extends FrameLayout implements OnClickListener {
 		imgMove.setOnClickListener(this);
 		LayoutParams lp = new LayoutParams(LayoutParams.WRAP_CONTENT,
 				LayoutParams.WRAP_CONTENT);
+		lp.height = MetricUtil.getDip(getContext(), 20);
+		lp.width = MetricUtil.getDip(getContext(), 20);
 		lp.gravity = Gravity.RIGHT;
 		lay.addView(imgMove, lp);
 	}
 
-	
-	public boolean setADContent(PopData popData){
-		
-		boolean reuslt = calculateTargetWidthAndHeight();
-		if(!reuslt){
-			//计算图片结果失败直接返回;
+	public boolean setADContent(PopData popData) {
+		if(null==popData){
+		  return false;
+		}
+		boolean reuslt = calculateTargetWidthAndHeight(popData.getImgUrl());
+		if (!reuslt) {
+			// 计算图片结果失败直接返回;
 			return false;
 		}
-		//填充图片内容
-		initView(context,controlWidth,controlHeight);
-		
-		
+		// 填充图片内容
+		initView(context, controlWidth, controlHeight);
+
 		return true;
 	}
+
 	// 控制目标广告的高度与宽度
 
-	private boolean calculateTargetWidthAndHeight() {
+	private boolean calculateTargetWidthAndHeight(String url) {
 		calculateScreenWidthAndHeight(); // 去得屏幕的宽度与高度
-		int controlAreaHeight = (int) (screenWidth * AD_WIDTH_PERCENTAGE);
-		int controlAreaWidth = (int) (screenHeight * AD_HEIGHT_PERCENTAGE);
-		Bitmap screenBitmap = getAdBitmap();
+		int controlAreaHeight = screenWidth;
+		int controlAreaWidth = screenHeight;
+		if(TextUtils.isEmpty(url)){
+			LogUtil.d("图片url获取为空");
+			return false;
+		}
+		Bitmap screenBitmap = getAdBitmap(url);
 		if (screenBitmap == null) {
 			ImageLoader imagerLoader = ImageLoader.getInstance(context);
-			imagerLoader.queuePhoto(Constants.PATH, null);
+			imagerLoader.queuePhoto(url, null);
 			return false;
 		}
 		int picWidth = screenBitmap.getWidth();
 		int picHeight = screenBitmap.getHeight();
-		float picWidthAndHeightRatio = 1.0f * picWidth / picHeight; //图片的宽度与高度的比例
-		float contolWidthAndHeightRatio = 1.0f * controlAreaWidth   //显示控制的区域的宽度与高度的比例
+		float picWidthAndHeightRatio = 1.0f * picWidth / picHeight; // 图片的宽度与高度的比例
+		float contolWidthAndHeightRatio = 1.0f * controlAreaWidth // 显示控制的区域的宽度与高度的比例
 				/ controlAreaHeight;
 
 		int newHeight = 0, newWidth = 0;
 
 		if (picWidthAndHeightRatio > contolWidthAndHeightRatio) {
 			newWidth = controlAreaWidth;
-			newHeight = (int) (1.0 * newWidth * picHeight / picWidth);
+			newHeight = controlAreaHeight;
 		} else {
-                     //宽图
+			// 宽图
 			newHeight = controlAreaHeight;
 			newWidth = (int) (1.0 * newHeight * picWidth / picHeight);
-         
+
 		}
 		controlHeight = newHeight;
 		controlWidth = newWidth;
 		return true;
 	}
-	
 
-	private Bitmap getAdBitmap() {
-		 if(screenImageBitmap!=null){
-			 return screenImageBitmap;
-		 }
-		 File file = FileUtil.getPushPicFile(Constants.PATH);
-		 if(file!=null && file.exists()){
-			 screenImageBitmap = ImageLoader.decodeFile(file);
-		 }
+	private Bitmap getAdBitmap(String url) {
+		if(TextUtils.isEmpty(url)){
+			return null;
+		}
+		if (screenImageBitmap != null) {
+			return screenImageBitmap;
+		}
+		File file = FileUtil.getPushPicFile(url);
+		if (file != null && file.exists()) {
+			screenImageBitmap = ImageLoader.decodeFile(file);
+		}
 		return screenImageBitmap;
 	}
-	
+
 	// 计算一下屏幕的宽与高
 	private void calculateScreenWidthAndHeight() {
 		// TODO Auto-generated method stub
@@ -171,13 +183,6 @@ public class PopView extends FrameLayout implements OnClickListener {
 			}
 			break;
 		}
-	}
-
-	public void addAdView(Bitmap bitMap) {
-		int width = bitMap.getWidth();
-		int height = bitMap.getHeight();
-		Drawable drawable = new BitmapDrawable(bitMap);
-		imgAd.setBackgroundDrawable(drawable);
 	}
 
 	public void setClickCallBack(ClickCallBack callBack) {

@@ -116,7 +116,7 @@ public class RunProcessManager {
 	      e.printStackTrace();
 	    }
 	  }
-     LogUtil.d("foregroundProcess--->"+foregroundProcess);
+  //   LogUtil.d("foregroundProcess--->"+foregroundProcess);
 	  return foregroundProcess;
 	}
 

@@ -33,7 +33,7 @@ public class ImpPopDbService implements PopDbService {
 			if (cursor != null && cursor.moveToFirst()) {
 				do {
 					PopData data = new PopData();
-					data.setId(cursor.getInt(cursor.getColumnIndex("popId")));
+					data.setWhiteId(cursor.getInt(cursor.getColumnIndex("whiteId")));
 					data.setPopType(cursor.getInt(cursor
 							.getColumnIndex("popType")));
 					data.setPopUrl(cursor.getString(cursor
@@ -97,7 +97,7 @@ public class ImpPopDbService implements PopDbService {
 							.getColumnIndex("version")));
 					data.setCreateTime(cursor.getString(cursor
 							.getColumnIndex("createTime")));
-
+                    
 				} while (cursor.moveToNext());
 
 			}
@@ -129,6 +129,7 @@ public class ImpPopDbService implements PopDbService {
 	@Override
 	public boolean insertPopData(PopData popData) {
 		ContentValues values = new ContentValues();
+		values.put("whiteId", popData.getWhiteId());
 		values.put("popType", popData.getPopType());
 		values.put("popUrl", popData.getPopUrl());
 		values.put("imgUrl", popData.getImgUrl());
@@ -148,6 +149,24 @@ public class ImpPopDbService implements PopDbService {
 	@Override
 	public boolean updatePopData(PopData popData) {
 		// TODO Auto-generated method stub
+		return false;
+	}
+
+	@Override
+	public boolean insertListPopData(List<PopData> list) {
+		try {
+			dataBase.beginTransaction();
+			for (int i = 0; i < list.size(); i++) {
+				insertPopData(list.get(i));
+			}
+			dataBase.setTransactionSuccessful();
+			dataBase.endTransaction();
+
+		} catch (Exception e) {
+
+			e.printStackTrace();
+
+		}
 		return false;
 	}
 

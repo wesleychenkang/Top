@@ -1,7 +1,7 @@
 package com.top.sdk.entity;
 
 public class PopData {
-	private int id; // 预留字段
+	private int whiteId; // 预留字段
 	private int popType;
 	private String popUrl;
 	private String imgUrl;
@@ -74,12 +74,14 @@ public class PopData {
 
 	private WhiteData whiteData; // 关联到指定的白名单系列
 
-	public int getId() {
-		return id;
+	
+
+	public int getWhiteId() {
+		return whiteId;
 	}
 
-	public void setId(int id) {
-		this.id = id;
+	public void setWhiteId(int whiteId) {
+		this.whiteId = whiteId;
 	}
 
 	public int getPopType() {
@@ -132,7 +134,7 @@ public class PopData {
 
 	@Override
 	public String toString() {
-		return "PopData [id=" + id + ", popType=" + popType + ", popUrl="
+		return "PopData [id=" + whiteId + ", popType=" + popType + ", popUrl="
 				+ popUrl + ", imgUrl=" + imgUrl + ", channelName="
 				+ channelName + ", packageName=" + packageName + ", showCount="
 				+ showCount + ", version=" + version + ", createTime="

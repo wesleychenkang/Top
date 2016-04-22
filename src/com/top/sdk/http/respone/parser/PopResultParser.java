@@ -33,8 +33,10 @@ public class PopResultParser implements ParserInterface<PopResult> {
 
 				// 广告列表开始解析
 				JSONArray arrayPop = jsonData.getJSONArray("popList");
+			
 				PopData pop = null;
 				List<PopData> listPop = new ArrayList<PopData>();
+	
 				if (arrayPop != null && arrayPop.length() > 0) {
 					for (int i = 0; i < arrayPop.length(); i++) {
 						JSONObject j = arrayPop.getJSONObject(i);
@@ -44,8 +46,7 @@ public class PopResultParser implements ParserInterface<PopResult> {
 						pop.setPackageName(j.getString("packageName"));
 						pop.setChannelName(j.getString("channelName"));
 						pop.setPopUrl(j.getString("popUrl"));
-						pop.setId(j.getInt("whiteId"));
-						LogUtil.d("===列表中的广告数据"+pop.toString());
+						pop.setWhiteId(j.getInt("whiteId"));
 						listPop.add(pop);
 					}
 					result.setListPop(listPop);

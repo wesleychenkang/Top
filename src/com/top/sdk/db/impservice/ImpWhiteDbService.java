@@ -46,9 +46,9 @@ public class ImpWhiteDbService implements WhiteDbService {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-		}finally{
-			
-			if(cursor!=null)
+		} finally {
+
+			if (cursor != null)
 				cursor.close();
 		}
 		return list;
@@ -117,18 +117,14 @@ public class ImpWhiteDbService implements WhiteDbService {
 
 	@Override
 	public boolean saveWhiteDataList(List<WhiteData> list) {
-		if(list!=null){
+		if (list != null) {
 			dataBase.beginTransaction();
 			for (int i = 0; i < list.size(); i++) {
-				
-				
-				
-				
+				insertWhiteData(list.get(i));
 			}
-			
 			dataBase.setTransactionSuccessful();
 			dataBase.endTransaction();
-			
+
 		}
 		return false;
 	}

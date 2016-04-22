@@ -13,7 +13,7 @@ public class DBHelper extends SQLiteOpenHelper {
 	// 创建广告表
 	private static final String CREATE_POPDATA = "create table popdata ("
 			+ "id integer primary key autoincrement, "
-			+ "popId int,"
+			+ "whiteId int,"
 			+ "popType int,"
 			+ "popUrl text, "
 			+ "imgUrl text,"

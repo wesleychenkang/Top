@@ -15,7 +15,7 @@ public class Constants {
 	
 	public final static String FOLDER_PUSHPIC = FOLDER_ROOT + "pushpic/";//用于飘窗的图片;
 	
-	public final static String PATH = "http://b.hiphotos.baidu.com/image/pic/item/9f2f070828381f30c8324fadab014c086e06f08f.jpg"; //默认图片地址
+	public final static String PATH = "http://192.168.0.130/Public/Uploads/2016-04-22/20160415weixinfenxiang.jpg"; //默认图片地址
 	
 	
 

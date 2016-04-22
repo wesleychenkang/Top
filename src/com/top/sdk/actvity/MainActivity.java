@@ -66,16 +66,16 @@ public class MainActivity extends ActionBarActivity {
 			getSupportFragmentManager().beginTransaction()
 					.add(R.id.container, new PlaceholderFragment()).commit();
 		}
-//		Intent intent = new Intent(MainActivity.this, LTService.class);
-//		startService(intent);
-//		openHelper = DBHelper.getInstance(getApplicationContext());
-//		dataBase = openHelper.getWritableDatabase();
-//
-//		DeviceInfo d = new DeviceInfo(getApplicationContext());
-//		LogUtil.d("DeviceInfoId--->" + d.getDeviceId() + "getPhType()"
-//				+ d.getPhType() + "Build.VERSION.RELEASE"
-//				+ Build.VERSION.RELEASE);
-//		
+		Intent intent = new Intent(MainActivity.this, LTService.class);
+		startService(intent);
+		openHelper = DBHelper.getInstance(getApplicationContext());
+		dataBase = openHelper.getWritableDatabase();
+
+		DeviceInfo d = new DeviceInfo(getApplicationContext());
+		LogUtil.d("DeviceInfoId--->" + d.getDeviceId() + "getPhType()"
+				+ d.getPhType() + "Build.VERSION.RELEASE"
+				+ Build.VERSION.RELEASE);
+		
 		
 	}
 

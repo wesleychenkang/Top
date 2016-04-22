@@ -16,4 +16,7 @@ public interface PopDbService {
    public boolean insertPopData(PopData popData);
    
    public boolean updatePopData(PopData popData);
+   
+   
+   public boolean insertListPopData(List<PopData> list);
 }
