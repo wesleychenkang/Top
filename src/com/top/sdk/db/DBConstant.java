@@ -1,0 +1,6 @@
+package com.top.sdk.db;
+
+public class DBConstant {
+  public static final String TABLE_NAME_POPDATA = "popdata";
+  public static final String TABLE_NAME_WHITEDATA = "whitedata";
+}
