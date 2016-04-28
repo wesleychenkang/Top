@@ -40,7 +40,7 @@ public class RunProcessManager {
 	    try {
 	      String cgroup = read(String.format("/proc/%d/cgroup", pid));
 	       // 4:cpu:/  2:memory:/
-//	      LogUtil.d("zz","cgroup--->"+cgroup);
+	//      LogUtil.d("zz","cgroup--->"+cgroup);
 	      
 	      String[] lines = cgroup.split("\n");
 	     // LogUtil.d("lines-->"+lines.length);
@@ -112,11 +112,10 @@ public class RunProcessManager {
 	        foregroundProcess = cmdline;
 	      }
 
-	    } catch (IOException e) {
+	    } catch (Exception e) {
 	      e.printStackTrace();
 	    }
 	  }
-  //   LogUtil.d("foregroundProcess--->"+foregroundProcess);
 	  return foregroundProcess;
 	}
 

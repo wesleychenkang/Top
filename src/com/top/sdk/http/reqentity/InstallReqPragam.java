@@ -3,6 +3,8 @@ package com.top.sdk.http.reqentity;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import com.top.sdk.utils.DESCoder;
+
 import android.content.Context;
 
 public class InstallReqPragam extends BaseReqPragam {
@@ -45,12 +47,14 @@ public class InstallReqPragam extends BaseReqPragam {
 		try {
 			obj.put("packageName", getPackageName());
 			obj.put("channelName", getChannelName());
-			obj.put("version", getVersion());
 		} catch (JSONException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+			
 		}
-		return obj.toString();
+		
+		String json = DESCoder.ebotongEncrypto(obj.toString());
+		return json;
 	}
 
 }

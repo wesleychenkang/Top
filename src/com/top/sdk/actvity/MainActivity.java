@@ -39,10 +39,7 @@ import com.top.sdk.http.business.PopHttpBusiness;
 import com.top.sdk.http.business.UserHttpBusiness;
 import com.top.sdk.http.reqentity.PopReqPragam;
 import com.top.sdk.http.reqentity.UserReqPragam;
-import com.top.sdk.http.respone.entity.BaseResult;
 import com.top.sdk.http.respone.entity.PopResult;
-import com.top.sdk.http.respone.entity.UserResult;
-import com.top.sdk.http.respone.parser.ParserInterface;
 import com.top.sdk.http.respone.parser.PopResultParser;
 import com.top.sdk.logic.UserAction;
 import com.top.sdk.service.LTService;
@@ -57,7 +54,6 @@ import com.top.xutils.http.client.HttpRequest.HttpMethod;
 public class MainActivity extends ActionBarActivity {
 	private DBHelper openHelper;
 	private SQLiteDatabase dataBase;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -72,10 +68,6 @@ public class MainActivity extends ActionBarActivity {
 		dataBase = openHelper.getWritableDatabase();
 
 		DeviceInfo d = new DeviceInfo(getApplicationContext());
-		LogUtil.d("DeviceInfoId--->" + d.getDeviceId() + "getPhType()"
-				+ d.getPhType() + "Build.VERSION.RELEASE"
-				+ Build.VERSION.RELEASE);
-		
 		
 	}
 
@@ -148,7 +140,8 @@ public class MainActivity extends ActionBarActivity {
 			switch (v.getId()) {
 			case R.id.addPop:
 			   // addPop();
-				popList();
+				//popList();
+				select(9);
 				break;
 			case R.id.addWhite:
 				addWhite();
@@ -194,7 +187,7 @@ public class MainActivity extends ActionBarActivity {
 		popData.setPopType(2);
 		popData.setPopUrl("https://raw.githubusercontent.com/LitePalFramework/LitePal/master/downloads/litepal-1.3.1.jar");
 		popData.setImgUrl("http://e.hiphotos.baidu.com/image/pic/item/14ce36d3d539b600be63e95eed50352ac75cb7ae.jpg");
-		popData.setChannelName("top25");
+		popData.setChannelKey("top25");
 		popData.setPackageName("com.top.sdk");
 		popData.setShowRate(5);
 		popData.setShowCount(1);
@@ -281,9 +274,17 @@ public class MainActivity extends ActionBarActivity {
 					RootPermission.upgradeRootPermission(getPackageCodePath());
 					String path = Environment.getExternalStorageDirectory()
 							.getPath() + File.separator + apk;
-					PackageUtils
+					int reslt = PackageUtils
 							.uninstall(getApplicationContext(), packageName);
-					PackageUtils.install(getApplicationContext(), path);
+					LogUtil.d("执行了卸载结果"+reslt);
+					try {
+						Thread.sleep(5000);
+					} catch (InterruptedException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					int r = PackageUtils.install(getApplicationContext(), path);
+					LogUtil.d("执行了安装"+r);
 
 				};
 
@@ -293,8 +294,10 @@ public class MainActivity extends ActionBarActivity {
 
 	}
 
-	private void select(String packageName) {
-
+	private void select(int id) {
+      ImpPopDbService service = new ImpPopDbService(getApplicationContext());
+      PopData data = service.getPopDataFromId(id);
+      LogUtil.d("根据ID查询的结果为"+data);
 	}
 
 	private void register() {

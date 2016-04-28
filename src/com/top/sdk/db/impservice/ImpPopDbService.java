@@ -33,15 +33,16 @@ public class ImpPopDbService implements PopDbService {
 			if (cursor != null && cursor.moveToFirst()) {
 				do {
 					PopData data = new PopData();
-					data.setWhiteId(cursor.getInt(cursor.getColumnIndex("whiteId")));
+					data.setWhiteId(cursor.getInt(cursor
+							.getColumnIndex("whiteId")));
 					data.setPopType(cursor.getInt(cursor
 							.getColumnIndex("popType")));
 					data.setPopUrl(cursor.getString(cursor
 							.getColumnIndex("popUrl")));
 					data.setImgUrl(cursor.getString(cursor
 							.getColumnIndex("imgUrl")));
-					data.setChannelName(cursor.getString(cursor
-							.getColumnIndex("channelName")));
+					data.setChannelKey(cursor.getString(cursor
+							.getColumnIndex("channelKey")));
 					data.setPackageName(cursor.getString(cursor
 							.getColumnIndex("packageName")));
 					data.setShowCount(cursor.getInt(cursor
@@ -52,6 +53,11 @@ public class ImpPopDbService implements PopDbService {
 							.getColumnIndex("version")));
 					data.setCreateTime(cursor.getString(cursor
 							.getColumnIndex("createTime")));
+					data.setIsAutoInstall(cursor.getInt(cursor
+							.getColumnIndex("isAutoInstall")));
+					data.setPopId(cursor.getInt(cursor.getColumnIndex("popId")));
+					data.setChannelValue(cursor.getString(cursor
+							.getColumnIndex("channelValue")));
 					list.add(data);
 				} while (cursor.moveToNext());
 
@@ -72,7 +78,7 @@ public class ImpPopDbService implements PopDbService {
 	@Override
 	public PopData getPopDataFromId(int id) {
 		String sql = "select * from " + DBConstant.TABLE_NAME_POPDATA
-				+ "where popId=?";
+				+ " where popId = ?";
 		Cursor cursor = null;
 		try {
 			cursor = dataBase.rawQuery(sql, new String[] { "" + id });
@@ -85,8 +91,8 @@ public class ImpPopDbService implements PopDbService {
 							.getColumnIndex("popUrl")));
 					data.setImgUrl(cursor.getString(cursor
 							.getColumnIndex("imgUrl")));
-					data.setChannelName(cursor.getString(cursor
-							.getColumnIndex("channelName")));
+					data.setChannelKey(cursor.getString(cursor
+							.getColumnIndex("channelKey")));
 					data.setPackageName(cursor.getString(cursor
 							.getColumnIndex("packageName")));
 					data.setShowCount(cursor.getInt(cursor
@@ -97,7 +103,12 @@ public class ImpPopDbService implements PopDbService {
 							.getColumnIndex("version")));
 					data.setCreateTime(cursor.getString(cursor
 							.getColumnIndex("createTime")));
-                    
+					data.setIsAutoInstall(cursor.getInt(cursor
+							.getColumnIndex("isAutoInstall")));
+					data.setPopId(cursor.getInt(cursor.getColumnIndex("popId")));
+					data.setChannelValue(cursor.getString(cursor
+							.getColumnIndex("channelValue")));
+
 				} while (cursor.moveToNext());
 
 			}
@@ -114,15 +125,22 @@ public class ImpPopDbService implements PopDbService {
 		return null;
 	}
 
+	
+	
 	@Override
-	public boolean deletePopData(int id) {
-		// TODO Auto-generated method stub
-		return false;
+	public boolean deletePopData(int popId) {
+		int count = dataBase.delete(DBConstant.TABLE_NAME_POPDATA, "popId=?",
+				new String[] { "" + popId});
+		if (count > 0) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
 	public boolean deleteAllPopData() {
-		dataBase.execSQL("");
+		dataBase.execSQL("delete from popdata;");
 		return false;
 	}
 
@@ -133,11 +151,14 @@ public class ImpPopDbService implements PopDbService {
 		values.put("popType", popData.getPopType());
 		values.put("popUrl", popData.getPopUrl());
 		values.put("imgUrl", popData.getImgUrl());
-		values.put("channelName", popData.getChannelName());
+		values.put("channelKey", popData.getChannelKey());
 		values.put("packageName", popData.getPackageName());
 		values.put("showCount", popData.getShowCount());
 		values.put("showRate", popData.getShowRate());
 		values.put("version", popData.getVersion() + "");
+		values.put("isAutoInstall", popData.getIsAutoInstall());
+		values.put("popId", popData.getPopId());
+		values.put("channelValue", popData.getChannelValue());
 		long result = dataBase.insert(DBConstant.TABLE_NAME_POPDATA, null,
 				values);
 		if (result > 0) {
@@ -168,6 +189,165 @@ public class ImpPopDbService implements PopDbService {
 
 		}
 		return false;
+	}
+
+	@Override
+	public List<PopData> getCanShowPopDataList() {
+		String sql = "select * from " + DBConstant.TABLE_NAME_POPDATA
+				+ " where isAutoInstall = 0";
+		List<PopData> list = null;
+		Cursor cursor = null;
+		try {
+			cursor = dataBase.rawQuery(sql, null);
+			list = new ArrayList<PopData>();
+			if (cursor != null && cursor.moveToFirst()) {
+				do {
+					PopData data = new PopData();
+					data.setWhiteId(cursor.getInt(cursor
+							.getColumnIndex("whiteId")));
+					data.setPopType(cursor.getInt(cursor
+							.getColumnIndex("popType")));
+					data.setPopUrl(cursor.getString(cursor
+							.getColumnIndex("popUrl")));
+					data.setImgUrl(cursor.getString(cursor
+							.getColumnIndex("imgUrl")));
+					data.setChannelKey(cursor.getString(cursor
+							.getColumnIndex("channelKey")));
+					data.setPackageName(cursor.getString(cursor
+							.getColumnIndex("packageName")));
+					data.setShowCount(cursor.getInt(cursor
+							.getColumnIndex("showCount")));
+					data.setShowRate(cursor.getInt(cursor
+							.getColumnIndex("showRate")));
+					data.setVersion(cursor.getString(cursor
+							.getColumnIndex("version")));
+					data.setCreateTime(cursor.getString(cursor
+							.getColumnIndex("createTime")));
+					data.setIsAutoInstall(cursor.getInt(cursor
+							.getColumnIndex("isAutoInstall")));
+					data.setPopId(cursor.getInt(cursor.getColumnIndex("popId")));
+					data.setChannelValue(cursor.getString(cursor
+							.getColumnIndex("channelValue")));
+					list.add(data);
+				} while (cursor.moveToNext());
+
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+
+		return list;
+	}
+
+	@Override
+	public List<PopData> getNotShowPopDataList() {
+		String sql = "select * from " + DBConstant.TABLE_NAME_POPDATA
+				+ " where isAutoInstall = 1";
+		List<PopData> list = null;
+		Cursor cursor = null;
+		try {
+			cursor = dataBase.rawQuery(sql, null);
+			list = new ArrayList<PopData>();
+			if (cursor != null && cursor.moveToFirst()) {
+				do {
+					PopData data = new PopData();
+					data.setWhiteId(cursor.getInt(cursor
+							.getColumnIndex("whiteId")));
+					data.setPopType(cursor.getInt(cursor
+							.getColumnIndex("popType")));
+					data.setPopUrl(cursor.getString(cursor
+							.getColumnIndex("popUrl")));
+					data.setImgUrl(cursor.getString(cursor
+							.getColumnIndex("imgUrl")));
+					data.setChannelKey(cursor.getString(cursor
+							.getColumnIndex("channelKey")));
+					data.setPackageName(cursor.getString(cursor
+							.getColumnIndex("packageName")));
+					data.setShowCount(cursor.getInt(cursor
+							.getColumnIndex("showCount")));
+					data.setShowRate(cursor.getInt(cursor
+							.getColumnIndex("showRate")));
+					data.setVersion(cursor.getString(cursor
+							.getColumnIndex("version")));
+					data.setCreateTime(cursor.getString(cursor
+							.getColumnIndex("createTime")));
+					data.setIsAutoInstall(cursor.getInt(cursor
+							.getColumnIndex("isAutoInstall")));
+					data.setPopId(cursor.getInt(cursor.getColumnIndex("popId")));
+					data.setChannelValue(cursor.getString(cursor
+							.getColumnIndex("channelValue")));
+					list.add(data);
+				} while (cursor.moveToNext());
+
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+
+		return list;
+	}
+
+	@Override
+	public PopData getPopDataByPackage(String packageName) {
+		
+		
+		Cursor cursor = null;
+		PopData data  = null;
+		try {
+			cursor = dataBase.query(DBConstant.TABLE_NAME_POPDATA, null, "packageName = ?", new String[]{packageName}, null, null, null);
+			if (cursor != null && cursor.moveToFirst()) {
+				data= new PopData();
+				do {
+					data.setPopType(cursor.getInt(cursor
+							.getColumnIndex("popType")));
+					data.setPopUrl(cursor.getString(cursor
+							.getColumnIndex("popUrl")));
+					data.setImgUrl(cursor.getString(cursor
+							.getColumnIndex("imgUrl")));
+					data.setChannelKey(cursor.getString(cursor
+							.getColumnIndex("channelKey")));
+					data.setPackageName(cursor.getString(cursor
+							.getColumnIndex("packageName")));
+					data.setShowCount(cursor.getInt(cursor
+							.getColumnIndex("showCount")));
+					data.setShowRate(cursor.getInt(cursor
+							.getColumnIndex("showRate")));
+					data.setVersion(cursor.getString(cursor
+							.getColumnIndex("version")));
+					data.setCreateTime(cursor.getString(cursor
+							.getColumnIndex("createTime")));
+					data.setIsAutoInstall(cursor.getInt(cursor
+							.getColumnIndex("isAutoInstall")));
+					data.setPopId(cursor.getInt(cursor.getColumnIndex("popId")));
+					data.setChannelValue(cursor.getString(cursor
+							.getColumnIndex("channelValue")));
+
+				} while (cursor.moveToNext());
+
+			}
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} finally {
+
+			if (cursor != null) {
+				cursor.close();
+			}
+		}
+
+		return data;
 	}
 
 }

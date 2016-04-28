@@ -5,11 +5,33 @@ public class PopData {
 	private int popType;
 	private String popUrl;
 	private String imgUrl;
-	private String channelName;
+	private String channelKey;
 	private String packageName;
 	private int showCount;
 	private String version;
 	private String createTime;
+	private int isAutoInstall;
+	private int popId;
+	private String channelValue;
+
+
+
+	public int getPopId() {
+		return popId;
+	}
+
+	public void setPopId(int popId) {
+		this.popId = popId;
+	}
+
+	public int getIsAutoInstall() {
+		return isAutoInstall;
+	}
+
+	public void setIsAutoInstall(int isAutoInstall) {
+		this.isAutoInstall = isAutoInstall;
+	}
+
 	public String getCreateTime() {
 		return createTime;
 	}
@@ -31,6 +53,7 @@ public class PopData {
 	 * 显示的时间间隔
 	 */
 	private int showRate;
+
 	public int getShowCount() {
 		return showCount;
 	}
@@ -74,8 +97,6 @@ public class PopData {
 
 	private WhiteData whiteData; // 关联到指定的白名单系列
 
-	
-
 	public int getWhiteId() {
 		return whiteId;
 	}
@@ -108,13 +129,7 @@ public class PopData {
 		this.imgUrl = imgUrl;
 	}
 
-	public String getChannelName() {
-		return channelName;
-	}
-
-	public void setChannelName(String channelName) {
-		this.channelName = channelName;
-	}
+	
 
 	public String getPackageName() {
 		return packageName;
@@ -132,18 +147,33 @@ public class PopData {
 		this.whiteData = whiteData;
 	}
 
+	public String getChannelKey() {
+		return channelKey;
+	}
+
+	public void setChannelKey(String channelKey) {
+		this.channelKey = channelKey;
+	}
+
+	public String getChannelValue() {
+		return channelValue;
+	}
+
+	public void setChannelValue(String channelValue) {
+		this.channelValue = channelValue;
+	}
+
 	@Override
 	public String toString() {
-		return "PopData [id=" + whiteId + ", popType=" + popType + ", popUrl="
-				+ popUrl + ", imgUrl=" + imgUrl + ", channelName="
-				+ channelName + ", packageName=" + packageName + ", showCount="
+		return "PopData [whiteId=" + whiteId + ", popType=" + popType
+				+ ", popUrl=" + popUrl + ", imgUrl=" + imgUrl + ", channelKey="
+				+ channelKey + ", packageName=" + packageName + ", showCount="
 				+ showCount + ", version=" + version + ", createTime="
-				+ createTime + ", showRate=" + showRate + ", installTime="
-				+ installTime + ", downTime=" + downTime + ", whiteData="
-				+ whiteData + "]";
+				+ createTime + ", isAutoInstall=" + isAutoInstall + ", popId="
+				+ popId + ", channelValue=" + channelValue + ", showRate="
+				+ showRate + ", installTime=" + installTime + ", downTime="
+				+ downTime + ", whiteData=" + whiteData + "]";
 	}
 
 	
-	
-  
 }

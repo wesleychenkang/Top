@@ -15,7 +15,7 @@ public class PopHttpBusiness implements InterfaceHttpbusiness{
 		HttpUtils http = new HttpUtils();
 		RequestParams requst = new RequestParams();
 		requst.addBodyParameter("appId","1");
-		requst.addBodyParameter("channelId","1022");
+		requst.addBodyParameter("channelId","1046");
 		requst.addBodyParameter("header", pargam.toJson());
 		http.send(HttpMethod.POST, Constants.URL_POP_LIST, requst, call);
 	}

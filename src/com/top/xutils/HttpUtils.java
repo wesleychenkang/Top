@@ -252,7 +252,7 @@ public class HttpUtils {
 
     public HttpHandler<File> download(String url, String target,
                                       RequestCallBack<File> callback) {
-        return download(HttpRequest.HttpMethod.GET, url, target, null, false, false, callback);
+        return download(HttpRequest.HttpMethod.GET, url, target, null, true, false, callback);
     }
 
     public HttpHandler<File> download(String url, String target,

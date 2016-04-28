@@ -4,6 +4,7 @@ import com.top.sdk.actvity.PopActivity;
 import com.top.sdk.logic.PopAction;
 import com.top.sdk.processes.RunProcessManager;
 import com.top.sdk.utils.LogUtil;
+import com.top.sdk.utils.SharedPrefUtil;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -15,12 +16,14 @@ public class RunningThread extends Thread {
 	private Context context;
 	private boolean keepRunning = true;
 	private boolean appChangedFlag = false;
+
 	public RunningThread(Context context) {
 		this.context = context;
 	}
 
 	@Override
 	public void run() {
+		LogUtil.d("app", "检测线程启动了");
 		ActivityManager mActivityManager = (ActivityManager) context
 				.getSystemService(Context.ACTIVITY_SERVICE);
 		while (keepRunning) {
@@ -42,11 +45,16 @@ public class RunningThread extends Thread {
 					&& PopAction.checkPackageName(packageName)) {
 				result = true;
 			}
+			long nowTime = 0;
 			//
-			if (appChangedFlag && result) { // 如果应用正切换为新的应用，并且可以展示广告的话就展示
-
-				showADFloatingWindow();
-				appChangedFlag = false;
+			if (appChangedFlag && result) { // 如果应用正切换为新的应用，并且在应用市场里面的话，就展示广告
+				nowTime = System.currentTimeMillis(); // 记录当前弹出广告的时间
+				if (nowTime - SharedPrefUtil.getAdShowTime(context) > 1000 * 10) {
+					showADFloatingWindow();
+					appChangedFlag = false;
+					SharedPrefUtil.setAdShowTime(context,
+							System.currentTimeMillis());
+				}
 			} else {
 				try {
 					Thread.sleep(3000);
@@ -56,6 +64,7 @@ public class RunningThread extends Thread {
 
 			}
 
+			
 		}
 
 	}
@@ -73,12 +82,12 @@ public class RunningThread extends Thread {
 			if (now - AppRecord.startTime > 4 * 1000) {
 				appChangedFlag = false;
 			}
-			LogUtil.d("记录到了当前的应用========" + packageName);
+			// LogUtil.d("记录到了当前的应用========" + packageName);
 		} else {
 			if (AppRecord.pName != null) {
 				// 换应用使用了
 				appChangedFlag = true; // 开启了新的应用
-				LogUtil.d("开启了新应用====");
+				LogUtil.d("开启了新应用===="+AppRecord.pName);
 			}
 			AppRecord.pName = packageName;
 			AppRecord.startTime = System.currentTimeMillis();

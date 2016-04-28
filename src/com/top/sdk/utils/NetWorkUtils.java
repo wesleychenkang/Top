@@ -37,6 +37,14 @@ public class NetWorkUtils {
         return networkInfo == null ? -1 : networkInfo.getType();
     }
 
+    
+    public static boolean  isWifiNetWork (Context context){
+    	if(NETWORK_TYPE_WIFI.equals(getNetworkTypeName(context))){
+    		return true;
+    	}
+    	return false;
+    	
+    }
     /**
      * Get network type name
      * 

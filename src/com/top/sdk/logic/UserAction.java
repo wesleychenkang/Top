@@ -33,10 +33,12 @@ public class UserAction {
 					// 激活成功，将用户ID保存在本地
 					UserResultParser parser = new UserResultParser();
 					BaseResult result = parser.parserJson(json);
-					if (result.getCode() == 0) {
+					int code = result.getCode();
+					if (code == 0 ||code==3 ) {
 						String userId = DeviceUtil.readUserId(context);
 						DeviceUtil.saveUserKey(context, userId);
 					}
+					
 					ISENTER = false;
 				}
 

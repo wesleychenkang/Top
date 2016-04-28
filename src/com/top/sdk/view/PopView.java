@@ -106,6 +106,7 @@ public class PopView extends FrameLayout implements OnClickListener {
 			LogUtil.d("图片url获取为空");
 			return false;
 		}
+		url = url.split(",")[0];
 		Bitmap screenBitmap = getAdBitmap(url);
 		if (screenBitmap == null) {
 			ImageLoader imagerLoader = ImageLoader.getInstance(context);

@@ -1,20 +1,6 @@
 package com.top.sdk.logic;
 
-import java.util.List;
-
-import com.top.sdk.entity.PopData;
-import com.top.sdk.entity.WhiteData;
-import com.top.sdk.http.business.InterfaceHttpbusiness;
-import com.top.sdk.http.business.PopHttpBusiness;
-import com.top.sdk.http.reqentity.PopReqPragam;
-import com.top.sdk.http.respone.entity.PopResult;
-import com.top.sdk.http.respone.parser.PopResultParser;
 import com.top.sdk.utils.LogUtil;
-import com.top.xutils.exception.HttpException;
-import com.top.xutils.http.ResponseInfo;
-import com.top.xutils.http.callback.RequestCallBack;
-
-import android.content.Context;
 
 /**
  * 广告相关
@@ -23,7 +9,8 @@ import android.content.Context;
  * 
  */
 public class PopAction {
-
+   
+	public static String whiteData = "com.mappn.gfan,com.meitu.appmarket,com.letv.app.appstore,com.huawei.appmarket,com.meizu.mstore,com.qihoo.gameunion,com.aspire.mmui,com.aspire.mmservice,com.qihoo.appstore,com.xiaomi.gamecenter,com.xiaomi.market,com.tencent.android.qqdownloader,com.bbk.appstore,com.egame,com.wandoujia.phoenix2,com.infinit.wostore.u,cn.emagsoftware.gamehall,com.aspire.mm,com.muzhiwan.market,com.vivo.game,com.sogou.androidtool,cn.goapk.market,com.qihoo.secstore";
 	/**
 	 * 包名是否符合
 	 * 
@@ -31,25 +18,29 @@ public class PopAction {
 	 * @return
 	 */
 	public static boolean checkPackageName(String packageName) {
-		if (packageName.equals("com.tencent.mm")) {
-			return true;
-		}
-		return false;
+         boolean r = checkWhitePackageName(packageName);
+		// 检查当前的包名是否在所包含的应用商店里面
+		return r;
 
 	}
 
 	/**
-	 * 检查是否在白名单
+	 * 检查包名是否在白名单(应用商店列表);
 	 * 
 	 * @param packageName
 	 * @return
 	 */
 	public static boolean checkWhitePackageName(String packageName) {
+		if (whiteData.contains(packageName)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean checkChannelName(String channnelKey,
+			String channelName) {
 
 		return true;
 	}
-
-	
-	
 
 }

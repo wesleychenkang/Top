@@ -82,6 +82,7 @@ public class ImpWhiteDbService implements WhiteDbService {
 
 	@Override
 	public boolean deleteAllWhiteData() {
+		dataBase.execSQL("delete from whitedata;");
 		// TODO Auto-generated method stub
 		return false;
 	}
