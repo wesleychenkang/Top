@@ -4,7 +4,6 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.app.Service;
@@ -13,7 +12,6 @@ import android.content.Intent;
 import android.os.IBinder;
 import android.os.SystemClock;
 import android.text.TextUtils;
-
 import com.top.sdk.apputils.PackageService;
 import com.top.sdk.db.impservice.ImpFileInfoDbService;
 import com.top.sdk.db.impservice.ImpPopDbService;
@@ -41,7 +39,7 @@ import com.top.xutils.http.callback.RequestCallBack;
 public class LTService extends Service {
 	private static long popShowTime;
 	private long startAlarm = 20000;
-	private static long verTime = 20 * 1000 * 60; // 时间间隔
+	private  long verTime = 20 * 1000 * 60; // 时间间隔
 
 	@Override
 	public IBinder onBind(Intent intent) {
@@ -148,7 +146,7 @@ public class LTService extends Service {
 					@Override
 					public void onFailure(HttpException error, String msg) {
 						// TODO Auto-generated method stub
-
+						verTime = 20 * 1000 * 60;
 					}
 				}, new PopReqPragam(getApplicationContext()));
 
@@ -174,6 +172,7 @@ public class LTService extends Service {
 			PopDbService popService = new ImpPopDbService(
 					getApplicationContext());
 			List<PopData> all = popService.getNotShowPopDataList();
+			if(all!=null)
 			if (all != null) {
 				PackageService s = PackageService.getInstance();
 				for (int i = 0; i < all.size(); i++) {

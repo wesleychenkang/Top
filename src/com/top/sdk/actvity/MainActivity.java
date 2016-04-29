@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.ContentValues;
 import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
@@ -18,9 +19,13 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 
 import com.top.sdk.R;
 import com.top.sdk.apputils.PackageUtils;
@@ -51,23 +56,35 @@ import com.top.xutils.http.ResponseInfo;
 import com.top.xutils.http.callback.RequestCallBack;
 import com.top.xutils.http.client.HttpRequest.HttpMethod;
 
-public class MainActivity extends ActionBarActivity {
+public class MainActivity extends Activity {
 	private DBHelper openHelper;
 	private SQLiteDatabase dataBase;
+	private LinearLayout ly = null;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 		setContentView(R.layout.activity_main);
-		if (savedInstanceState == null) {
-			getSupportFragmentManager().beginTransaction()
-					.add(R.id.container, new PlaceholderFragment()).commit();
-		}
-		Intent intent = new Intent(MainActivity.this, LTService.class);
-		startService(intent);
-		openHelper = DBHelper.getInstance(getApplicationContext());
-		dataBase = openHelper.getWritableDatabase();
-
-		DeviceInfo d = new DeviceInfo(getApplicationContext());
+		ly = (LinearLayout)findViewById(R.id.layout);
+		ly.getBackground().setAlpha(0);
+		ly.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				finish();
+			}
+		});
+		
+//		if (savedInstanceState == null) {
+//			getSupportFragmentManager().beginTransaction()
+//					.add(R.id.container, new PlaceholderFragment()).commit();
+//		}
+		
+//		openHelper = DBHelper.getInstance(getApplicationContext());
+//		dataBase = openHelper.getWritableDatabase();
+//
+//		DeviceInfo d = new DeviceInfo(getApplicationContext());
 		
 	}
 

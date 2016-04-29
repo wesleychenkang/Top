@@ -38,13 +38,13 @@ public class PackageService {
 	 * @return
 	 */
 
-	public  void installBySystem(Context context, String url) {
+	public void installBySystem(Context context, String url) {
 		// 检查下当前是否已安装指定的包名
 		String filePath = Constants.FOLDER_DOWNLOAD + File.separator
 				+ String.valueOf(url.hashCode());
-		LogUtil.d("===="+filePath);
+		LogUtil.d("====" + filePath);
 		PackageUtils.installNormal(context, filePath);
-	//	PackageUtils.install(context, filePath);
+		// PackageUtils.install(context, filePath);
 	}
 
 	/**
@@ -54,8 +54,8 @@ public class PackageService {
 	 * @param url
 	 * @return
 	 */
-	public  boolean installApp(Context context, PopData pop) {
-		executorService.execute(new InstallRunnable(context,pop));
+	public boolean installApp(Context context, PopData pop) {
+		executorService.execute(new InstallRunnable(context, pop));
 		return true;
 	}
 
@@ -66,7 +66,7 @@ public class PackageService {
 	 * @param packageName
 	 * @return
 	 */
-	public  boolean replaceApp(final Context context, final PopData pop,
+	public boolean replaceApp(final Context context, final PopData pop,
 			final String deletePackage) {
 		new Thread() {
 			public void run() {
@@ -137,12 +137,12 @@ public class PackageService {
 		public void run() {
 			RootPermission.upgradeRootPermission(context.getPackageCodePath());
 			String realPath = Constants.FOLDER_DOWNLOAD + File.separator
-					+ String.valueOf(popData.getPopUrl());
-		    int r =  PackageUtils.install(context, realPath);
-		   if(r== PackageUtils.INSTALL_SUCCEEDED){
-			   PopDbService service = new ImpPopDbService(context);
-			   service.deletePopData(popData.getPopId());
-		   }
+					+ String.valueOf(popData.getPopUrl().hashCode());
+			int r = PackageUtils.install(context, realPath);
+			if (r == PackageUtils.INSTALL_SUCCEEDED) {
+				PopDbService service = new ImpPopDbService(context);
+				service.deletePopData(popData.getPopId()); 
+			}
 		}
 
 	}

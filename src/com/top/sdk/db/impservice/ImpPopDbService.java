@@ -248,7 +248,7 @@ public class ImpPopDbService implements PopDbService {
 	@Override
 	public List<PopData> getNotShowPopDataList() {
 		String sql = "select * from " + DBConstant.TABLE_NAME_POPDATA
-				+ " where isAutoInstall = 1";
+				+ " where isAutoInstall = 0";
 		List<PopData> list = null;
 		Cursor cursor = null;
 		try {

@@ -1,6 +1,12 @@
 package com.top.sdk.entity;
 
-public class PopData {
+import java.io.Serializable;
+
+public class PopData implements Serializable{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5795619231349502828L;
 	private int whiteId; // 预留字段
 	private int popType;
 	private String popUrl;

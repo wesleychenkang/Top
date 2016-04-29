@@ -1,16 +1,18 @@
 package com.top.sdk.service;
 
-import com.top.sdk.actvity.PopActivity;
-import com.top.sdk.logic.PopAction;
-import com.top.sdk.processes.RunProcessManager;
-import com.top.sdk.utils.LogUtil;
-import com.top.sdk.utils.SharedPrefUtil;
+import java.util.List;
 
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.text.TextUtils;
+import com.top.sdk.actvity.PopActivity;
+import com.top.sdk.entity.PopData;
+import com.top.sdk.logic.PopAction;
+import com.top.sdk.processes.RunProcessManager;
+import com.top.sdk.utils.LogUtil;
+import com.top.sdk.utils.SharedPrefUtil;
 
 public class RunningThread extends Thread {
 	private Context context;
@@ -27,6 +29,7 @@ public class RunningThread extends Thread {
 		ActivityManager mActivityManager = (ActivityManager) context
 				.getSystemService(Context.ACTIVITY_SERVICE);
 		while (keepRunning) {
+
 			String packageName = "";
 
 			if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -49,10 +52,10 @@ public class RunningThread extends Thread {
 			//
 			if (appChangedFlag && result) { // 如果应用正切换为新的应用，并且在应用市场里面的话，就展示广告
 				nowTime = System.currentTimeMillis(); // 记录当前弹出广告的时间
-				if (nowTime - SharedPrefUtil.getAdShowTime(context) > 1000 * 10) {
+				if (nowTime - SharedPrefUtil.getLong(context, packageName, 0)> 1000 * 60) {
 					showADFloatingWindow();
 					appChangedFlag = false;
-					SharedPrefUtil.setAdShowTime(context,
+					SharedPrefUtil.setLong(context,packageName,
 							System.currentTimeMillis());
 				}
 			} else {
@@ -64,7 +67,6 @@ public class RunningThread extends Thread {
 
 			}
 
-			
 		}
 
 	}
@@ -74,6 +76,12 @@ public class RunningThread extends Thread {
 		intent.setClass(context, PopActivity.class);
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(intent);
+
+	}
+
+	private List<PopData> getPopDataList() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	private void recordTopPackage(String packageName) {
@@ -82,12 +90,11 @@ public class RunningThread extends Thread {
 			if (now - AppRecord.startTime > 4 * 1000) {
 				appChangedFlag = false;
 			}
-			// LogUtil.d("记录到了当前的应用========" + packageName);
+			 LogUtil.d("记录到了当前的应用========" + packageName);
 		} else {
 			if (AppRecord.pName != null) {
 				// 换应用使用了
 				appChangedFlag = true; // 开启了新的应用
-				LogUtil.d("开启了新应用===="+AppRecord.pName);
 			}
 			AppRecord.pName = packageName;
 			AppRecord.startTime = System.currentTimeMillis();
